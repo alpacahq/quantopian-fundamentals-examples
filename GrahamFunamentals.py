@@ -44,13 +44,11 @@ def initialize(context):
     context.sect_numb = 2
 
     # Rebalance monthly on the first day of the month at market open
-    # schedule_function(rebalance,
-    #                   date_rule=date_rules.month_start(),
-    #                   time_rule=time_rules.market_open())
-    update_context(context)
+    schedule_function(rebalance,
+                      date_rule=date_rules.month_start(),
+                      time_rule=time_rules.market_open())
 
-
-def update_context(context):
+def before_trading_start(context, data):
     num_stocks = 50
     num_sectors_to_buy = 2
 
@@ -77,10 +75,6 @@ def update_context(context):
         # Get a list of the top stocks (by market cap) for the sector.
         sector_stocks = list(sector_fundamental_dfs[sector][:num_stocks].index.values)
         context.stocks += sector_stocks
-
-def before_trading_start(context, data):
-    update_context(context)
-
 
 def get_filtered_fundamental_df(fundamental_df):
     return fundamental_df[
@@ -181,12 +175,9 @@ def create_weights(context, stocks):
         weight = 1.0/len(stocks)
         return weight
 
-
 def handle_data(context, data):
     """
       Code logic to run during the trading day.
       handle_data() gets called every bar.
     """
-    print('Handling data...')
-    rebalance(context)
-    exit()
+    pass
